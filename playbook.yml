@@ -1,0 +1,6 @@
+- hosts: all
+  tasks:
+  - name: Create directory structure
+    win_file:
+     path: C:\Temp\folder\subfolder
+     state: directory

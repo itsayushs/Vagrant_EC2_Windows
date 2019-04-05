@@ -55,4 +55,46 @@ winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 ```
 #  vagrant up --provider=aws
 ```
+### Using Ansible:
+```
+Vagrant.configure("2") do |config|
+  config.vm.box = "dummy"
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id = ""
+    aws.secret_access_key = ""
+    aws.region = 'ap-south-1'
+    aws.ami = "ami-0572a5af4c190f430"
+    aws.keypair_name = "aws_win"
+    aws.instance_type = "t2.micro"
+    aws.terminate_on_shutdown = true
+    aws.security_groups = ["sg-1575267f"]
+    aws.subnet_id = "subnet-a1a0e3c9"
+    aws.associate_public_ip = true
+    config.vm.communicator = "winrm"
+    config.winrm.username = "Administrator"
+    override.winrm.password = :aws
+    override.ssh.private_key_path = "/home/ayush/ansible_stuff/win_enduser/Vagrant/aws_win"
+    aws.user_data = File.read("startupps.txt")
+    config.vm.provision :ansible do |ansible|
+       ansible.host_vars = {"ansible_port" => 5985,"ansible_user" => 'Administrator',"ansible_connection" => "winrm"}
+       ansible.playbook = "playbook.yml"
+  end
+ end
+end
 
+```
+- Contents inside playbook.yml
+```
+- hosts: all
+  tasks:
+  - name: Create directory structure
+    win_file:
+     path: C:\Temp\folder\subfolder
+     state: directory
+
+```
+- Use following commands:
+```
+#  vagrant up
+#  vagrant provision
+```
