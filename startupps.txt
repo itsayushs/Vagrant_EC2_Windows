@@ -1,0 +1,8 @@
+<powershell>
+Enable-PSRemoting -Force
+netsh advfirewall firewall add rule name="WinRM HTTP" dir=in localport=5985 protocol=TCP action=allow
+winrm quickconfig -force
+Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+</powershell>
+

@@ -1,0 +1,8 @@
+[win]
+ipaddr
+[win:vars]
+ansible_user=Administrator
+ansible_password=""
+ansible_port=5985
+ansible_connection=winrm
+ansible_python_interpreter=/home/ayush/ansible_stuff/win_enduser/bin/python
